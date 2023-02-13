@@ -169,28 +169,6 @@ describe('SignUp Controller', () => {
     expect(isValidSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
-  test('Should call AddAccount with correct values', () => {
-    const { sut, addAccountStub } = makeSut()
-    const addSpy = jest.spyOn(addAccountStub, 'add')
-
-    const httpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password'
-      }
-    }
-
-    sut.handle(httpRequest)
-
-    expect(addSpy).toHaveBeenCalledWith({
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'any_password'
-    })
-  })
-
   test('Should return 500 if an EmailValidator throws', () => {
     const { sut, emailValidatorStub } = makeSut()
 
@@ -211,5 +189,49 @@ describe('SignUp Controller', () => {
 
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
+  })
+
+  test('Should return 500 if an AddAccount throws', () => {
+    const { sut, addAccountStub } = makeSut()
+
+    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+
+    const httpResponse = sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
+  })
+
+  test('Should call AddAccount with correct values', () => {
+    const { sut, addAccountStub } = makeSut()
+    const addSpy = jest.spyOn(addAccountStub, 'add')
+
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+
+    sut.handle(httpRequest)
+
+    expect(addSpy).toHaveBeenCalledWith({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password'
+    })
   })
 })
