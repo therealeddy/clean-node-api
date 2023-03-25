@@ -1,5 +1,4 @@
 import { type Express, Router } from 'express'
-// import fg from 'fast-glob'
 import { readdirSync } from 'fs'
 
 export default (app: Express): void => {
