@@ -26,6 +26,13 @@ export const MongoHelper = {
     return Object.assign({}, collectionWithoutId, { id: _id.toHexString() })
   },
 
+  mapArray (collection: any): any {
+    return collection.map(item => {
+      const { _id, ...collectionWithoutId } = item
+      return Object.assign({}, collectionWithoutId, { id: _id.toHexString() })
+    })
+  },
+
   parseToObjectId (value: string): ObjectId {
     return new ObjectId(value)
   }
