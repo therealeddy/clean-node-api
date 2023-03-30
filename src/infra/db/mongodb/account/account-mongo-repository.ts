@@ -1,6 +1,6 @@
 import { MongoHelper } from '../helpers/mongo-helper'
 
-import { type AddAccountModel } from '~/domain/usecases/add-account'
+import { type AddAccountModel } from '~/domain/usecases/account/add-account'
 import { type AccountModel } from '~/domain/models/account'
 import { type AddAccountRepository } from '~/data/protocols/db/account/add-account-repository'
 import { type LoadAccountByEmailRepository } from '~/data/protocols/db/account/load-account-by-email-repository'
