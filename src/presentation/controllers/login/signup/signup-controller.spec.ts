@@ -5,16 +5,16 @@ import { ok, serverError, badRequest, forbidden } from '~/presentation/helpers/h
 import {
   type AccountModel,
   type AddAccount,
-  type AddAccountModel,
+  type AddAccountParams,
   type HttpRequest,
   type Validation,
   type Authentication,
-  type AuthenticationModel
+  type AuthenticationParams
 } from './signup-controller-protocols'
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add (account: AddAccountModel): Promise<AccountModel> {
+    async add (account: AddAccountParams): Promise<AccountModel> {
       return await new Promise(resolve => { resolve(makeFakeAccount()) })
     }
   }
@@ -24,7 +24,7 @@ const makeAddAccount = (): AddAccount => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<string> {
+    async auth (authentication: AuthenticationParams): Promise<string> {
       return await new Promise(resolve => { resolve('any_token') })
     }
   }
