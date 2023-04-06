@@ -18,7 +18,7 @@
     "test:coveralls": "npm run test:ci && coveralls < coverage/lcov.info"
   },
   "author": "Eduardo Mauricio",
-  "license": "ISC",
+  "license": "GPL-3.0-or-later",
   "devDependencies": {
     "@shelf/jest-mongodb": "^4.1.6",
     "@types/bcrypt": "^5.0.0",
