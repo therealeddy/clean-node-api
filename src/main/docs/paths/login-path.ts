@@ -6,7 +6,7 @@ export const loginPath = {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/schemas/login-params'
+            $ref: '#/schemas/loginParams'
           }
         }
       }
