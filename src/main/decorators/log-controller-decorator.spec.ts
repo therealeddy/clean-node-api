@@ -1,18 +1,9 @@
 import { LogControllerDecorator } from './log-controller-decorator'
-import { type Controller, type HttpRequest, type HttpResponse } from '~/presentation/protocols'
+import { type Controller, type HttpResponse } from '~/presentation/protocols'
 import { serverError, ok } from '~/presentation/helpers/http/http-helper'
 import { type LogErrorRepository } from '~/data/protocols/db/log/log-error-repository'
 import { mockAccountModel } from '~/domain/test'
 import { mockLogErrorRepository } from '~/data/test'
-
-const mockRequest = (): HttpRequest => ({
-  body: {
-    name: 'any_name',
-    email: 'any_email@mail.com',
-    password: 'any_password',
-    passwordConfirmation: 'any_password'
-  }
-})
 
 const mockServerError = (): HttpResponse => {
   const fakeError = new Error()
@@ -29,7 +20,7 @@ type SutTypes = {
 
 const makeController = (): Controller => {
   class ControllerStub implements Controller {
-    async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+    async handle (request: any): Promise<HttpResponse> {
       return await Promise.resolve(ok(mockAccountModel()))
     }
   }
@@ -55,14 +46,14 @@ describe('LogController Decorator', () => {
     const { sut, controllerStub } = makeSut()
     const handleSpy = jest.spyOn(controllerStub, 'handle')
 
-    await sut.handle(mockRequest())
-    expect(handleSpy).toHaveBeenCalledWith(mockRequest())
+    await sut.handle('any_value')
+    expect(handleSpy).toHaveBeenCalledWith('any_value')
   })
 
   test('Should return the same result of the controller', async () => {
     const { sut } = makeSut()
 
-    const httpResponse = await sut.handle(mockRequest())
+    const httpResponse = await sut.handle('any_value')
     expect(httpResponse).toEqual(ok(mockAccountModel()))
   })
 
@@ -73,7 +64,7 @@ describe('LogController Decorator', () => {
 
     jest.spyOn(controllerStub, 'handle').mockReturnValueOnce(Promise.resolve(mockServerError()))
 
-    await sut.handle(mockRequest())
+    await sut.handle('any_value')
     expect(logSpy).toHaveBeenCalledWith('any_stack')
   })
 })

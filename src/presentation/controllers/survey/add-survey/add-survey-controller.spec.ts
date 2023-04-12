@@ -1,4 +1,4 @@
-import { type Validation, type HttpRequest, type AddSurvey } from './add-survey-controller-protocols'
+import { type Validation, type AddSurvey } from './add-survey-controller-protocols'
 
 import { AddSurveyController } from './add-survey-controller'
 import { badRequest, noContent, serverError } from '~/presentation/helpers/http/http-helper'
@@ -6,15 +6,12 @@ import { throwError } from '~/domain/test'
 import { mockValidation, mockAddSurvey } from '~/presentation/test'
 import MockDate from 'mockdate'
 
-const mockRequest = (): HttpRequest => ({
-  body: {
-    question: 'any_question',
-    answers: [{
-      image: 'any_image',
-      answer: 'any_answer'
-    }],
-    date: new Date()
-  }
+const mockRequest = (): AddSurveyController.Request => ({
+  question: 'any_question',
+  answers: [{
+    image: 'any_image',
+    answer: 'any_answer'
+  }]
 })
 
 type SutTypes = {
@@ -47,9 +44,9 @@ describe('AddSurvey Controller', () => {
   test('Should call Validation with correct values', async () => {
     const { sut, validationStub } = makeSut()
     const validateSpy = jest.spyOn(validationStub, 'validate')
-    const httpRequest = mockRequest()
-    await sut.handle(httpRequest)
-    expect(validateSpy).toHaveBeenLastCalledWith(httpRequest.body)
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(validateSpy).toHaveBeenLastCalledWith(request)
   })
 
   test('Should return 400 if Validation fails', async () => {
@@ -62,9 +59,9 @@ describe('AddSurvey Controller', () => {
   test('Should call AddSurvey with correct values', async () => {
     const { sut, addSurveyStub } = makeSut()
     const addSpy = jest.spyOn(addSurveyStub, 'add')
-    const httpRequest = mockRequest()
-    await sut.handle(httpRequest)
-    expect(addSpy).toHaveBeenLastCalledWith(httpRequest.body)
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(addSpy).toHaveBeenLastCalledWith({ ...request, date: new Date() })
   })
 
   test('Should return 500 if AddSurvey throws', async () => {

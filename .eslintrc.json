@@ -10,6 +10,7 @@
     "@typescript-eslint/prefer-optional-chain": "off",
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/await-thenable": "off",
-    "n/no-path-concat": "off"
+    "n/no-path-concat": "off",
+    "@typescript-eslint/no-namespace": "off"
   }
 }
