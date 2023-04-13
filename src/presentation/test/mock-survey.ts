@@ -1,12 +1,12 @@
 import { type SurveyModel } from '~/domain/models/survey'
-import { type AddSurvey, type AddSurveyParams } from '~/domain/usecases/survey/add-survey'
+import { type AddSurvey } from '~/domain/usecases/survey/add-survey'
 import { type LoadSurveyById } from '~/domain/usecases/survey/load-survey-by-id'
 import { type LoadSurveys } from '~/domain/usecases/survey/load-surveys'
 import { mockSurveyModel, mockSurveyModels } from '~/domain/test'
 
 export const mockAddSurvey = (): AddSurvey => {
   class AddSurveyStub implements AddSurvey {
-    async add (data: AddSurveyParams): Promise<void> {
+    async add (data: AddSurvey.Params): Promise<void> {
       await Promise.resolve(null)
     }
   }
