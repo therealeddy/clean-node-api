@@ -1,10 +1,10 @@
 import { type LoadSurveyResultRepository } from '~/data/protocols/db/survey-result/load-survey-result-repository'
-import { type SaveSurveyResultParams, type SurveyResultModel, type SaveSurveyResultRepository } from '~/data/usecases/survey-result/save-survey-result/db-save-survey-result-protocols'
+import { type SaveSurveyResultRepository } from '~/data/usecases/survey-result/save-survey-result/db-save-survey-result-protocols'
 import { MongoHelper, QueryBuilder } from '../helpers'
 import round from 'mongo-round'
 
 export class SurveyResultMongoRepository implements SaveSurveyResultRepository, LoadSurveyResultRepository {
-  async save (data: SaveSurveyResultParams): Promise<void> {
+  async save (data: SaveSurveyResultRepository.Params): Promise<void> {
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
     await surveyResultCollection.findOneAndUpdate({
       surveyId: MongoHelper.parseToObjectId(data.surveyId),
@@ -19,7 +19,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
     })
   }
 
-  async loadBySurveyId (surveyId: string, accountId: string): Promise<SurveyResultModel> {
+  async loadBySurveyId (surveyId: string, accountId: string): Promise<LoadSurveyResultRepository.Result> {
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
 
     const query = new QueryBuilder()
@@ -193,7 +193,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
       })
       .build()
 
-    const surveyResult = await surveyResultCollection.aggregate(query).toArray() as SurveyResultModel[]
+    const surveyResult = await surveyResultCollection.aggregate(query).toArray() as LoadSurveyResultRepository.Result[]
     return surveyResult.length ? surveyResult[0] : null
   }
 }
