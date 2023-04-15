@@ -1,23 +1,43 @@
 import { MongoHelper } from '../helpers/mongo-helper'
 
-import { type AccountModel } from '~/domain/models/account'
 import { type AddAccountRepository } from '~/data/protocols/db/account/add-account-repository'
 import { type LoadAccountByEmailRepository } from '~/data/protocols/db/account/load-account-by-email-repository'
+import { type CheckAccountByEmailRepository } from '~/data/protocols/db/account/check-account-by-email-repository'
 import { type UpdateAccessTokenRepository } from '~/data/protocols/db/account/update-access-token-repository'
 import { type LoadAccountByTokenRepository } from '~/data/protocols/db/account/load-account-by-token-repository'
 
-export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository {
+export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository, CheckAccountByEmailRepository {
   async add (accountData: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const result = await accountCollection.insertOne(accountData)
     const account = await accountCollection.findOne({ _id: result.insertedId })
-    return MongoHelper.map(account)
+    return account !== null
   }
 
-  async loadByEmail (email: string): Promise<AccountModel> {
+  async loadByEmail (email: string): Promise<LoadAccountByEmailRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
-    const account = await accountCollection.findOne({ email })
+    const account = await accountCollection.findOne({
+      email
+    }, {
+      projection: {
+        _id: 1,
+        name: 1,
+        password: 1
+      }
+    })
     return account && MongoHelper.map(account)
+  }
+
+  async checkByEmail (email: string): Promise<CheckAccountByEmailRepository.Result> {
+    const accountCollection = await MongoHelper.getCollection('accounts')
+    const account = await accountCollection.findOne({
+      email
+    }, {
+      projection: {
+        _id: 1
+      }
+    })
+    return account !== null
   }
 
   async updateAccessToken (id: string, token: string): Promise<void> {

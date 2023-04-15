@@ -1,18 +1,18 @@
-import { type Controller, type HttpResponse, type LoadSurveyById, type LoadSurveyResult } from './load-survey-result-controller-protocols'
+import { type Controller, type HttpResponse, type CheckSurveyById, type LoadSurveyResult } from './load-survey-result-controller-protocols'
 import { forbidden, serverError, ok } from '~/presentation/helpers/http/http-helper'
 import { InvalidParamError } from '~/presentation/errors'
 
 export class LoadSurveyResultController implements Controller {
   constructor (
-    private readonly loadSurveyById: LoadSurveyById,
+    private readonly checkSurveyById: CheckSurveyById,
     private readonly loadSurveyResult: LoadSurveyResult
   ) {}
 
   async handle (request: LoadSurveyResultController.Request): Promise<HttpResponse> {
     try {
       const { surveyId } = request
-      const survey = await this.loadSurveyById.loadById(surveyId)
-      if (!survey) {
+      const exists = await this.checkSurveyById.checkById(surveyId)
+      if (!exists) {
         return forbidden(new InvalidParamError('surveyId'))
       }
       const surveyResult = await this.loadSurveyResult.load(surveyId, request.accountId)
