@@ -1,12 +1,13 @@
 {
   "name": "clean-node-api",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "NodeJs Rest API using TDD, Clean Architecture, Typescript and Design Patterns",
   "author": "Eduardo Mauricio",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "start": "node dist/main/server.js",
+    "start": "node dist/main/server.ts",
     "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "dev": "nodemon src/main/server.ts",
     "postbuild": "copyfiles -u 1 public/**/* dist/static",
     "test": "jest --passWithNoTests --runInBand --no-cache",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
@@ -44,6 +45,7 @@
     "lint-staged": "^13.1.0",
     "mockdate": "^3.0.5",
     "rimraf": "^4.2.0",
+    "nodemon": "^2.0.21",
     "sucrase": "^3.29.0",
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.5",
@@ -56,7 +58,6 @@
     "module-alias": "^2.2.2",
     "mongo-round": "^1.0.0",
     "mongodb": "^5.0.1",
-    "nodemon": "^2.0.21",
     "swagger-ui-express": "^4.6.2",
     "validator": "^13.9.0"
   },
