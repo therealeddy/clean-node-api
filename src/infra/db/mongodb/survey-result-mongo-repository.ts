@@ -5,7 +5,7 @@ import { type LoadSurveyResultRepository, type SaveSurveyResultRepository } from
 
 export class SurveyResultMongoRepository implements SaveSurveyResultRepository, LoadSurveyResultRepository {
   async save (data: SaveSurveyResultRepository.Params): Promise<void> {
-    const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
+    const surveyResultCollection = MongoHelper.getCollection('surveyResults')
     await surveyResultCollection.findOneAndUpdate({
       surveyId: MongoHelper.parseToObjectId(data.surveyId),
       accountId: MongoHelper.parseToObjectId(data.accountId)
@@ -20,7 +20,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
   }
 
   async loadBySurveyId (surveyId: string, accountId: string): Promise<LoadSurveyResultRepository.Result> {
-    const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
+    const surveyResultCollection = MongoHelper.getCollection('surveyResults')
 
     const query = new QueryBuilder()
       .match({
@@ -193,7 +193,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
       })
       .build()
 
-    const surveyResult = await surveyResultCollection.aggregate(query).toArray() as LoadSurveyResultRepository.Result[]
+    const surveyResult = await surveyResultCollection.aggregate<LoadSurveyResultRepository.Result>(query).toArray()
     return surveyResult.length ? surveyResult[0] : null
   }
 }

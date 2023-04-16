@@ -37,8 +37,7 @@ const makeAccountId = async (): Promise<string> => {
     password: 'any_password'
   })
 
-  const account = await accountCollection.findOne({ _id: res.insertedId })
-  return String(account._id)
+  return res.insertedId.toHexString()
 }
 
 describe('Survey Result Mongo Repository', () => {
@@ -51,13 +50,13 @@ describe('Survey Result Mongo Repository', () => {
   })
 
   beforeEach(async () => {
-    surveyCollection = await MongoHelper.getCollection('surveys')
+    surveyCollection = MongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({})
 
-    surveyResultCollection = await MongoHelper.getCollection('surveyResults')
+    surveyResultCollection = MongoHelper.getCollection('surveyResults')
     await surveyResultCollection.deleteMany({})
 
-    accountCollection = await MongoHelper.getCollection('accounts')
+    accountCollection = MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
 
